@@ -1,11 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>biblioteca</title>  
-</head>
-<body>   
-</body>
-</html>
-<router-outlet><router-outlet />   
+<!-- App component template -->
+<div class="d-flex flex-column min-vh-100 bg-gradient">
+    <header class="bg-primary bg-opacity-10 text-center py-4 shadow-sm">
+        <div class="container">
+            <h1 class="display-5 fw-light text-white mb-3">🔐 Sistema de Login - Angular 20</h1>
+            <p class="lead text-white-50 mb-3">{{ welcomeMessage() }}</p>
+
+            <ng-container *ngIf="isAuthenticated()">
+                <button class="btn btn-danger btn-lg rounded-pill" (click)="logout()">
+                    🚪 Cerrar Sesión
+                </button>
+            </ng-container>
+        </div>
+    </header>
+
+    <main class="flex-grow-1 d-flex align-items-center justify-content-center py-5">
+        <div class="container">
+            <ng-container *ngIf="!isAuthenticated(); else authPanel">
+                <app-login (loginSuccess)="onLoginSuccess($event)"></app-login>
+            </ng-container>
+
+            <ng-template #authPanel>
+                <app-panel-admin [username]="currentUser()"></app-panel-admin>
+            </ng-template>
+        </div>
+    </main>
+
+    <footer class="bg-dark bg-opacity-25 text-center py-3">
+        <p class="text-white-50 mb-0">Desarrollado con ❤️ usando Angular 20 y Signals</p>
+    </footer>
+</div>
+
+<router-outlet></router-outlet>
