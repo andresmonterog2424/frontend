@@ -1,12 +1,33 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router'; // <-- ADD THIS IMPORT
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet], // <-- ADD RouterOutlet HERE
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css']
 })
-export class App {
-  protected readonly title = signal('frontend');
+export class AppComponent {
+  user: { role: string } | null = null;
+
+  // Mensaje dinámico
+  welcomeMessage(): string {
+    return this.isAuthenticated()
+      ? `Bienvenido, ${this.getRole().toUpperCase()}`
+      : 'Por favor, inicia sesión para continuar.';
+  }
+
+  // Simula autenticación
+  isAuthenticated(): boolean {
+    return this.user !== null;
+  }
+
+  // Devuelve el rol actual
+  getRole(): string {
+    return this.user ? this.user.role : '';
+  }
+
+  // Cierra sesión
+  logout(): void {
+    this.user = null;
+  }
 }
+

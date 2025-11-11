@@ -1,0 +1,80 @@
+<div class="book-list-page">
+  <h2>📚 Listado de Libros Disponibles</h2>
+  
+  <div class="controls-container">
+    
+    <div class="search-box">
+      <input 
+        type="text" 
+        [(ngModel)]="searchKeyword" 
+        (keyup.enter)="onSearch()" 
+        placeholder="Buscar por título o autor..."
+      >
+      <button (click)="onSearch()" class="btn-search">Buscar</button>
+      @if (searchKeyword) {
+          <button (click)="searchKeyword = ''; onSearch()" class="btn-clear">Limpiar</button>
+      }
+    </div>
+    
+    @if (authService.isAdmin()) {
+      <button class="btn-admin">
+        + Añadir Nuevo Libro
+      </button>
+    }
+  </div>
+
+  @if (isLoading()) {
+    <p class="loading-message">Cargando libros...</p>
+  } @else if (errorLoading()) {
+    <div class="alert error-message">{{ errorLoading() }}</div>
+  } @else if (books().length === 0 && searchKeyword) {
+    <p class="no-results-message">No se encontraron libros que coincidan con "{{ searchKeyword }}".</p>
+  } @else if (books().length === 0) {
+    <p class="no-results-message">No hay libros registrados en la biblioteca.</p>
+  }
+  
+  @if (books().length > 0) {
+    <table class="book-table">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Autor</th>
+          <th>ISBN</th>
+          <th class="text-center">Copias Totales</th>
+          <th class="text-center">Disponibles</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (book of books(); track book._id) {
+          <tr>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.isbn }}</td>
+            <td class="text-center">{{ book.totalCopies }}</td>
+            <td class="text-center">
+              <span [class.available]="book.availableCopies > 0" [class.unavailable]="book.availableCopies === 0">
+                {{ book.availableCopies }}
+              </span>
+            </td>
+            <td>
+              @if (authService.isAdmin()) {
+                <button class="btn-action edit">Editar</button>
+                <button (click)="/* Lógica de eliminación */" class="btn-action delete">Eliminar</button>
+              } @else if (authService.isLogged()) {
+                <button 
+                  [disabled]="book.availableCopies === 0" 
+                  (click)="/* Lógica de solicitud de préstamo */" 
+                  class="btn-action loan"
+                >
+                  {{ book.availableCopies > 0 ? 'Pedir Prestado' : 'No Disponible' }}
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+
+</div>

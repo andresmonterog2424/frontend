@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BotonPersonalizado } from './boton-personalizado';
+import { BookList } from './book-list';
 
-describe('BotonPersonalizado', () => {
-  let component: BotonPersonalizado;
-  let fixture: ComponentFixture<BotonPersonalizado>;
+describe('BookList', () => {
+  let component: BookList;
+  let fixture: ComponentFixture<BookList>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BotonPersonalizado]
+      imports: [BookList]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(BotonPersonalizado);
+    fixture = TestBed.createComponent(BookList);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

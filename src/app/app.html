@@ -1,33 +1,76 @@
-<!-- App component template -->
 <div class="d-flex flex-column min-vh-100 bg-gradient">
-    <header class="bg-primary bg-opacity-10 text-center py-4 shadow-sm">
-        <div class="container">
-            <h1 class="display-5 fw-light text-white mb-3">🔐 Sistema de Login - Angular 20</h1>
-            <p class="lead text-white-50 mb-3">{{ welcomeMessage() }}</p>
+  <!-- Enlace para saltar al contenido (mejora accesibilidad) -->
+  <a class="visually-hidden-focusable" href="#main">Saltar al contenido</a>
 
-            <ng-container *ngIf="isAuthenticated()">
-                <button class="btn btn-danger btn-lg rounded-pill" (click)="logout()">
-                    🚪 Cerrar Sesión
-                </button>
-            </ng-container>
-        </div>
-    </header>
+  <!-- Header -->
+  <header role="banner" class="bg-primary bg-opacity-10 text-center py-4 shadow-sm">
+    <div class="container">
+      <h1 class="display-5 fw-light text-white mb-3" i18n>
+        📚 Sistema de Gestión de Biblioteca
+      </h1>
 
-    <main class="flex-grow-1 d-flex align-items-center justify-content-center py-5">
-        <div class="container">
-            <ng-container *ngIf="!isAuthenticated(); else authPanel">
-                <app-login (loginSuccess)="onLoginSuccess($event)"></app-login>
-            </ng-container>
+      <!-- Mensaje de bienvenida -->
+      <p class="lead text-white-50 mb-3" role="status" aria-live="polite">
+        {{ welcomeMessage() }}
+      </p>
 
-            <ng-template #authPanel>
-                <app-panel-admin [username]="currentUser()"></app-panel-admin>
-            </ng-template>
-        </div>
-    </main>
+      <!-- Botón de cerrar sesión -->
+      <button
+        *ngIf="isAuthenticated()"
+        type="button"
+        class="btn btn-danger btn-lg rounded-pill shadow-sm"
+        (click)="logout()"
+        aria-label="Cerrar sesión"
+        title="Cerrar sesión"
+      >
+        🚪 Cerrar Sesión
+      </button>
+    </div>
+  </header>
 
-    <footer class="bg-dark bg-opacity-25 text-center py-3">
-        <p class="text-white-50 mb-0">Desarrollado con ❤️ usando Angular 20 y Signals</p>
-    </footer>
+  <!-- Main -->
+  <main
+    id="main"
+    role="main"
+    class="flex-grow-1 d-flex align-items-center justify-content-center py-5"
+    tabindex="-1"
+  >
+    <div class="container">
+      <!-- Si no está autenticado, muestra el login -->
+      <ng-container *ngIf="!isAuthenticated(); else authPanel">
+        <section aria-label="Iniciar sesión">
+          <login aria-label="Formulario de inicio de sesión"></login>
+        </section>
+      </ng-container>
+
+      <!-- Panel según rol -->
+      <ng-template #authPanel>
+        <section aria-label="Panel autenticado">
+          <ng-container [ngSwitch]="getRole()">
+            <!-- Panel de administración -->
+            <panel-admin *ngSwitchCase="'admin'" aria-label="Panel de administración"></panel-admin>
+
+            <!-- Panel de estudiante -->
+            <div *ngSwitchCase="'student'" class="text-center py-4">
+              <p i18n>Panel de estudiante aún no implementado.</p>
+            </div>
+
+            <!-- Rol desconocido -->
+            <div *ngSwitchDefault class="text-center text-muted py-4">
+              <p i18n>Rol no reconocido. Contacte al administrador si cree que esto es un error.</p>
+            </div>
+          </ng-container>
+        </section>
+      </ng-template>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer role="contentinfo" class="bg-dark bg-opacity-25 text-center py-3 mt-auto">
+    <div class="container">
+      <p class="text-white-50 mb-0">
+        © 2025 Sistema de Gestión de Biblioteca
+      </p>
+    </div>
+  </footer>
 </div>
-
-<router-outlet></router-outlet>
